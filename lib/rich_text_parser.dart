@@ -773,6 +773,7 @@ class HtmlRichTextParser extends StatelessWidget {
                               : false,
                     ),
                     onTap: () {
+                      _onImageTapParentLink(node);
                       if (onImageTap != null) {
                         onImageTap(node.attributes['src']);
                       }
@@ -813,6 +814,7 @@ class HtmlRichTextParser extends StatelessWidget {
                               : false,
                     ),
                     onTap: () {
+                      _onImageTapParentLink(node);
                       if (onImageTap != null) {
                         onImageTap(node.attributes['src']);
                       }
@@ -987,5 +989,18 @@ class HtmlRichTextParser extends StatelessWidget {
       }
     }
     return false;
+  }
+
+  void _onImageTapParentLink(dom.Node node) {
+    if (node.parent != null && node.parent is dom.Element) {
+      if(node.parent.localName == 'a') {
+        String url = node.parent.attributes['href'];
+        if (url != null && onLinkTap != null) {
+          onLinkTap(url);
+        }
+      } else {
+        _onImageTapParentLink(node.parent);
+      }
+    }
   }
 }
